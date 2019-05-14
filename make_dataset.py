@@ -57,7 +57,7 @@ def MakeSrcTrgDataset(src_path, trg_path, batch_size):
     # shuffle(buffer_size, sedd=None, reshuffle_each_iteration=None) buffer_size新数据集将从原来数据集中采样的个数。
     dataset = dataset.shuffle(10000)
 
-    # 要与output对应: ((src_input, src_len), (trg_input, trg_label, trg_len))
+    # 要与output对应: ((src_input, src_len), (trg_input, trg_label, trg_len)), 会自动补零，补到与同一个batch最长的序列一样的长度。
     padded_shapes = ((tf.TensorShape([None]), tf.TensorShape([])), (tf.TensorShape([None]), tf.TensorShape([None]), tf.TensorShape([])))
     batched_dataset = dataset.padded_batch(batch_size, padded_shapes)
     return batched_dataset
