@@ -62,7 +62,7 @@ class PreProcess:
         self.zh_vocab = [i for i in zh_vocab.split() if i]
 
     def english2id(self, en_str):
-        en_list = [self.en_vocab.index(i) for i in jieba.cut(en_str)]
+        en_list = [self.en_vocab.index(i) if i in self.en_vocab else self.en_vocab.index('<unk>') for i in jieba.cut(en_str) if i != ' ']
         return en_list
 
     def id2english(self, en_list):
@@ -70,7 +70,7 @@ class PreProcess:
         return ' '.join(ls)
 
     def chinese2id(self, zh_str):
-        zh_list = [self.zh_vocab.index(i) for i in jieba.cut(zh_str)]
+        zh_list = [self.zh_vocab.index(i) if i in self.zh_vocab else self.zh_vocab.index('<unk>') for i in jieba.cut(zh_str) if i != ' ']
         return zh_list
 
     def id2chinese(self, zh_list):
