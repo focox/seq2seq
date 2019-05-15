@@ -141,12 +141,20 @@ def interence_main():
     sess = tf.Session()
     saver = tf.train.Saver()
     saver.restore(sess, CHECKPOINT_PATH)
+    with tf.variable_scope('nmt_model', reuse=None):
+        model = NMTModel()
+        test_sentence = 'this is a test.'
+        test_sentence = preprocess.english2id(test_sentence)
+        output_op = model.inference(test_sentence)
+        sess = tf.Session()
+        saver = tf.train.Saver()
+        saver.restore(sess, CHECKPOINT_PATH)
 
-    output = sess.run(output_op)
+        output = sess.run(output_op)
 
-    print(output)
-    print(preprocess.id2chinese(output))
-    sess.close()
+        print(output)
+        print(preprocess.id2chinese(output))
+        sess.close()
 
 
 def main():
@@ -173,6 +181,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    interence_main()
+    main()
+    # interence_main()
 

@@ -41,12 +41,12 @@ class PreProcess:
 
     def generate_english_vocab(self, filename_en):
         data_list = self.read_data(filename_en)
-        data_list = self.clean_tags(data_list)
+        # data_list = self.clean_tags(data_list)
         self.en_vocab = self.vocab_counter(data_list)
 
     def generate_chinese_vocab(self, filename_zh):
         data_list = self.read_data(filename_zh)
-        data_list = self.clean_tags(data_list)
+        # data_list = self.clean_tags(data_list)
         self.zh_vocab = self.vocab_counter(data_list, vocab_size=20000, enable_segment=True, vocab_save_path='./zh.vocab')
 
     def generate_vocab(self, filename_en, filename_zh):
@@ -84,7 +84,8 @@ class PreProcess:
         # vocab = [i for i in vocab if i]
 
         data_list = self.read_data(corpus_path)
-        corpus = self.clean_tags(data_list)
+        # corpus = self.clean_tags(data_list)
+        corpus = data_list
 
         corpus_index = []
         print('pre-processing %s corpus...' % ('chinese' if enable_segment else 'english'))
