@@ -136,6 +136,7 @@ def interence_main():
     model = NMTModel()
     test_sentence = 'this is a test.'
     test_sentence = preprocess.english2id(test_sentence)
+    print(preprocess.id2english(test_sentence))
     output_op = model.inference(test_sentence)
     sess = tf.Session()
     saver = tf.train.Saver()
