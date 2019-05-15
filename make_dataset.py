@@ -3,12 +3,12 @@ import tensorflow as tf
 
 SRC_TRAIN_DATA = './train.en'
 TRG_TRAIN_DATA = './train.zh'
-CHECKPOINT_PATH = './model/seq2seq_ckpt'
+# CHECKPOINT_PATH = './model/seq2seq_ckpt'
 
 HIDDEN_SIZE = 1024
 NUM_LAYERS = 2
 SRC_VOCAB_SIZE = 10000
-TRG_VOCAB_SIZE = 10000
+TRG_VOCAB_SIZE = 20000
 BATCH_SIZE = 100
 NUM_EPOCHS = 5
 KEEP_PROB = 0.8
@@ -18,6 +18,7 @@ SHARE_EMB_AND_SOFTMAX = True
 
 MAX_LEN = 50
 SOS_ID = 0
+
 
 def MakeDataset(file_path):
     dataset = tf.data.TextLineDataset(file_path)
@@ -64,8 +65,9 @@ def MakeSrcTrgDataset(src_path, trg_path, batch_size):
 
 
 if __name__ == '__main__':
-    # data = MakeSrcTrgDataset(SRC_TRAIN_DATA, TRG_TRAIN_DATA, BATCH_SIZE)
-
-    dataset = MakeDataset('./train.en')
+    data = MakeSrcTrgDataset(SRC_TRAIN_DATA, TRG_TRAIN_DATA, BATCH_SIZE)
+    #
+    # dataset = MakeDataset('./train.en')
     with tf.Session() as tf:
-        tf.run(dataset)
+        # tf.run(dataset)
+        tf.run(data)

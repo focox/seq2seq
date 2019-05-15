@@ -4,9 +4,12 @@ from operator import itemgetter
 import jieba
 from tqdm import tqdm
 
+EN_VOCAB_SIZE = 10000
+ZH_VOCAB_SIZE = 20000
+
 
 class PreProcess:
-    def __init__(self, filename_en='./en.vocab', filename_zh='./zh.vocab'):
+    def __init__(self, filename_en='./vocab.en', filename_zh='./vocab.zh'):
         try:
             self.read_vocab(filename_en, filename_zh)
         except:
@@ -22,16 +25,16 @@ class PreProcess:
         data_list = [i[:-1] for i in data_list if '</' not in i and '>']
         return data_list
 
-    def vocab_counter(self, data_list, enable_segment=False, vocab_size=10000, vocab_save_path='./en.vocab'):
+    def vocab_counter(self, data_list, enable_segment=False, vocab_size=EN_VOCAB_SIZE, vocab_save_path='./vocab.en'):
         counter = collections.Counter()
         data_list = [jieba.cut(i) for i in data_list]
         print('pre-processing %s vocab...' % ('chinese' if enable_segment else 'english'))
         for s in tqdm(data_list):
             for w in s:
-                if w != ' ':
+                if w != ' ' and w != '\n':
                     counter[w] += 1
         vocab = sorted(counter.items(), key=itemgetter(1), reverse=True)
-        vocab = [x[0] for x in vocab if x[0] != ' ']
+        vocab = [x[0] for x in vocab if x[0] != ' ' and x[0] != '\n']
         vocab = vocab[:vocab_size]
         vocab = ['<sos>', '<eos>', '<unk>'] + vocab
         with codecs.open(vocab_save_path, 'w', 'utf-8') as f:
@@ -47,13 +50,14 @@ class PreProcess:
     def generate_chinese_vocab(self, filename_zh):
         data_list = self.read_data(filename_zh)
         # data_list = self.clean_tags(data_list)
-        self.zh_vocab = self.vocab_counter(data_list, vocab_size=20000, enable_segment=True, vocab_save_path='./zh.vocab')
+        self.zh_vocab = self.vocab_counter(data_list, vocab_size=ZH_VOCAB_SIZE, enable_segment=True, vocab_save_path='./vocab.zh')
 
     def generate_vocab(self, filename_en, filename_zh):
         self.generate_english_vocab(filename_en)
+
         self.generate_chinese_vocab(filename_zh)
 
-    def read_vocab(self, filename_en='./en.vocab', filename_zh='./zh.vocab'):
+    def read_vocab(self, filename_en='./vocab.en', filename_zh='./vocab.zh'):
         with codecs.open(filename_en, 'r', 'utf-8') as f:
             en_vocab = f.read()
         with codecs.open(filename_zh, 'r', 'utf-8') as f:
@@ -103,9 +107,9 @@ if __name__ == '__main__':
     filename_en = './en-zh/train.tags.en-zh.en'
     filename_zh = './en-zh/train.tags.en-zh.zh'
     preprocess = PreProcess()
-    # preprocess.generate_vocab(filename_en, filename_zh)
-    preprocess.transform2index(filename_en, './en.vocab', './train.en', enable_segment=False)
-    preprocess.transform2index(filename_zh, './zh.vocab', './train.zh', enable_segment=True)
+    preprocess.generate_vocab(filename_en, filename_zh)
+    preprocess.transform2index(filename_en, './vocab.en', './train.en', enable_segment=False)
+    preprocess.transform2index(filename_zh, './vocab.zh', './train.zh', enable_segment=True)
 
 
     # preprocess.read_data(filename_en)

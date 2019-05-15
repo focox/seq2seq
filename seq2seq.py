@@ -1,6 +1,9 @@
 import tensorflow as tf
-from make_dataset import *
-from preprocess import *
+from make_dataset import MakeSrcTrgDataset
+from preprocess import PreProcess
+
+import tensorflow.contrib.eager as tfe
+# tfe.enable_eager_execution()
 
 SRC_TRAIN_DATA = './train.en'
 TRG_TRAIN_DATA = './train.zh'
