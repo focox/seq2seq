@@ -77,6 +77,7 @@ class NMTModel:
 
         trainable_variables = tf.trainable_variables()
 
+        # 这里用于求各参数梯度的损失函数很有学问！这里为什么要除以batch_size
         grads = tf.gradients(cost/tf.to_float(batch_size), trainable_variables)
         grads, _ = tf.clip_by_global_norm(grads, MAX_GRAD_NORM)
         optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0)
